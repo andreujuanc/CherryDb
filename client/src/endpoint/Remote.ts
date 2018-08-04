@@ -16,12 +16,12 @@ export default class Remote {
     }
 
     async getNewRecordsFrom(recordId: string): Promise<Record[]> {
-        //console.log('getNewRecordsFrom', recordId)
-        var response = await fetch(`${this._endpoint}${this._path}/from/${recordId}`);
+        var response = await this._request.fetch(`${this._endpoint}${this._path}/from/${recordId}`, {});
         if (!response.ok)
             return [];
         var items = await response.json();
-        items.map((x) => Object.assign(new Record(), x));
+        if (Array.isArray(items))
+            items.map((x) => Object.assign(new Record(), x));
         return items;
     }
 

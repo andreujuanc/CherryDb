@@ -1,7 +1,7 @@
 import IRecord from '../data/IRecord';
 import Remote from './Remote';
 import Record from '../data/Record';
-import * as fetch from 'node-fetch'
+//import * as fetch from 'node-fetch'
 import IRequest from './IRequest';
 import FetchRequest from './FetchRequest';
 

@@ -49,4 +49,8 @@ export default class Store {
         }
         return records;
     }
+
+    Count() : number{
+        return this._data.length;
+    }
 }
