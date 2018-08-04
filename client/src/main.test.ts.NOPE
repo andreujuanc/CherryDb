@@ -1,9 +1,0 @@
-import CherryDb from './main';
-import { Promise } from 'es6-promise';
-import * as fetch from 'node-fetch'
-
-test('CherryDb', () => {
-    global['fetch'] = fetch; //url => new Promise<any>(x=>x());
-    var cdb = new CherryDb('http://localhost:8765');
-    expect(cdb.Start()).toBe(true);
-});
