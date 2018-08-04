@@ -1,0 +1,46 @@
+{
+  "name": "client",
+  "version": "1.0.0",
+  "description": "",
+  "main": "rollup.config.js",
+  "scripts": {
+    "build": "rollup -c",
+    "test": "jest",
+    "test:watch": "jest --watch"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/jest": "^23.3.1",
+    "@types/node-fetch": "^2.1.2",
+    "@types/es6-promise": "^3.3.0",
+    "jest": "^23.4.2",
+    "rollup": "^0.63.5",
+    "rollup-plugin-typescript": "^0.8.1",
+    "ts-jest": "^23.1.2"    
+  },
+  "jest": {
+    "testURL": "https://localhost/",
+    "testPathIgnorePatterns": [
+      "<rootDir>/build/",
+      "<rootDir>/node_modules/"
+    ],
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ],
+    "globals": {
+      "ts-jest": {
+        "tsConfigFile": "tsconfig.jest.json"
+      }
+    }
+  }
+}
