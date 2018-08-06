@@ -1,0 +1,55 @@
+<svelte:head>
+	<title>Sapper project template</title>
+</svelte:head>
+
+<h1>PapayaDb demo</h1>
+
+<ul>
+	{#each items as item}
+	<li>
+		{item.text}
+	</li>
+	{/each}
+</ul>
+<input type="text" bind:value="newItemText" />
+<button on:click=send()>
+	Send
+</button>
+<script>
+	import CherryDb from '../../client/build/cherrydb'
+	const db = new CherryDb();
+	export default {
+		data() {
+			return {
+				newItemText: '',
+				items: [{
+					id: 1, text: 'hi'
+				}]
+			}
+		},
+		oncreate() {
+			db.Start();
+			this.addItem({
+				id: 2, text: 'hello'
+			})
+		},
+		methods: {
+			send() {
+				const {newItemText} = this.get();
+				this.addItem({
+					text: newItemText
+				})
+				this.set({
+					newItemText: ''
+				})
+			},
+			addItem(item) {
+				var { items } = this.get();
+				items.push(item);
+				this.set({
+					items
+				})
+			}
+		}
+	}
+</script>

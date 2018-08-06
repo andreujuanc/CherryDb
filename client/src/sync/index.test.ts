@@ -6,7 +6,7 @@ import Record from '../data/Record';
 import IRequest from '../endpoint/IRequest';
 import FetchRequest from '../endpoint/FetchRequest';
 import Store from '../data/Store';
-import Sync from '.';
+import Sync from './index';
 
 jest.mock('../endpoint/FetchRequest');
 const endpointURL = 'http://localhost:8765';
