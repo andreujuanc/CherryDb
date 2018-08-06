@@ -1,16 +1,20 @@
 {
-  "name": "client",
-  "version": "1.0.0",
-  "description": "",
-  "main": "rollup.config.js",
+  "name": "cherrydb",
+  "version": "0.0.1",
+  "description": "A superfast alternative to pouchdb and azure mobile apps sdk.",
+  "repository": "github:andreujuanc/CherryDb",
+  "main": "./src/main.ts",
+  "keywords": [
+    "javascript", "javascript-library", "database", "sync", "data", "synchronization"
+  ],
   "scripts": {
     "build": "rollup -c",
     "build:dev": "rollup -c -w",
     "test": "jest",
     "test:watch": "jest --watch"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Juan C. Andreu <andreujuanc@gmail.com> (https://andr.eu)",
+  "license": "MIT",
   "devDependencies": {
     "@types/es6-promise": "^3.3.0",
     "@types/jest": "^23.3.1",
