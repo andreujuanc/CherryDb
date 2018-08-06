@@ -41,6 +41,6 @@ export default class Sync {
     async PollSync() {
         await this.Push();
         await this.Pull();
-        setTimeout(()=>this.PollSync(), 10000);
+        setTimeout(()=>this.PollSync(), 2000);
     }
 }

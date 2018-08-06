@@ -8,8 +8,8 @@ function one(req, res, next) {
     res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With,  X-HTTP-Method-Override, Content-Type, Accept");
     if (req.method === 'OPTIONS')
         return res.end();
-    console.log('DATA.length', DATA.length)
-    console.log(DATA)
+    //console.log('DATA.length', DATA.length)
+    //console.log(DATA)
     next();
 }
 
@@ -28,7 +28,7 @@ content-type: application/json
 
 {
     "id": "12",
-    "timestamp": "12345677891",
+    "timestamp": 12345677891,
     "text": "hello"
 }
  */
@@ -49,7 +49,7 @@ polka()
             res.end();
     })
     .get('/cherrydb/from/:ts', (req, res) => {
-        console.log('from', req.params.ts);
+        ///console.log('from', req.params.ts);
         const found = DATA.filter(x => x.timestamp > req.params.ts);
         if (found) {
             //res.statusCode = 200 ;
@@ -64,7 +64,7 @@ polka()
         }
     })
     .post('/cherrydb', (req, res) => {
-        console.log('POSTING');
+        //console.log('POSTING');
         try {
             var records = req.body;
             if (!Array.isArray(records))
@@ -81,12 +81,12 @@ polka()
                         DATA.push(records[i]);
                 }
             }
-            console.log('posted', json);
+            //console.log('posted', json);
             res.writeHead(200, {
                 'Content-Type': 'application/json'
             });
             res.end(json);
-            console.log('posted OK')
+            //console.log('posted OK')
         } catch{
             res.statusCode = 500;
             res.end();
