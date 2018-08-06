@@ -1,27 +1,35 @@
 import Store from "../data/Store";
 import Remote from "../endpoint/Remote";
+import { EventEmitter } from "events";
 
 export default class Sync {
     private _data: Store;
     private _remote: Remote;
+    public OnSyncCompleted: Function;
+
     constructor(data: Store, remote: Remote) {
         this._data = data;
         this._remote = remote;
     }
 
-    async Sync() {
+    async Pull() {
         try {
-            let lastId: string = null;
-            const lastRecord = this._data.GetLastRecord();
+            const TS = this._data.GetLastRecordTimeStamp();
             //console.log('Last record', lastRecord)
-            if (lastRecord != null)
-                lastId = lastRecord.id;
-            const remoteData = await this._remote.getNewRecordsFrom(lastId);
+            const remoteData = await this._remote.getNewRecordsFrom(TS);
             this._data.Upsert(remoteData);
+            if (this.OnSyncCompleted) this.OnSyncCompleted();
+
             return 1;
         }
         catch (ex) {
             throw ex;
         }
+    }
+
+    async PollSync() {
+
+        await this.Pull();
+        setTimeout(()=>this.PollSync(), 10000);
     }
 }

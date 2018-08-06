@@ -3,6 +3,7 @@ import Record from "../data/Record";
 import IRequest from "./IRequest";
 //import { Promise } from "es6-promise";
 
+const mapToRecord = (item) => Object.assign(new Record(), item);
 
 export default class Remote {
 
@@ -15,22 +16,26 @@ export default class Remote {
         this._request = request;
     }
 
-    async getNewRecordsFrom(recordId: string): Promise<Record[]> {
-        var response = await this._request.fetch(`${this._endpoint}${this._path}/from/${recordId}`, {});
+    async getNewRecordsFrom(timestamp: number): Promise<Record[]> {
+        let response = await this._request.fetch(`${this._endpoint}${this._path}/from/${timestamp}`, {
+            mode:'no-cors'
+        });
         if (!response.ok)
             return [];
-        var items = await response.json();
+        let items = await response.json();
         if (Array.isArray(items))
-            items.map((x) => Object.assign(new Record(), x));
+            items.map(mapToRecord);
         return items;
     }
 
-    async Send(record: IRecord): Promise<IRecord> {
+    async Send(record: IRecord | IRecord[]): Promise<IRecord | IRecord[]> {
         //console.log('posting to ', `${this._endpoint}${this._path}`)
         const data = JSON.stringify(record);
+        var isArray = Array.isArray(record);
         //console.log('data', data)
         return this._request.fetch(`${this._endpoint}${this._path}`, {
             method: 'POST',
+            mode:'no-cors',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
@@ -43,7 +48,7 @@ export default class Remote {
                     return response.json();
                 return [];
             })
-            .then(x => Object.assign(new Record(), x))
+            .then(x => isArray ? x.map(mapToRecord) : mapToRecord(x))
             .then(x => {
                 //console.log(x);
                 return x;

@@ -9,6 +9,8 @@ export default class Store {
     }
 
     private _data: IRecord[];
+    private _push: IRecord[];
+    
     constructor() {
         this._data = [];
     }
@@ -42,15 +44,25 @@ export default class Store {
         return record;
     }
 
-    Upsert(records: IRecord[]): IRecord[] {
+    Upsert(records: IRecord | IRecord[]): IRecord[] | IRecord {
         if (records == null) return null; //TODO: throw?
+        const isArray = Array.isArray(records);//DAMN TS COMPILER.
+        if (!Array.isArray(records)) { records = [ records] };
+
         for (let i = 0; i < records.length; i++) {
             records[i] = this.upsert(records[i]);
         }
-        return records;
+        if (isArray)
+            return records;
+        else
+            return records[0];
     }
 
-    Count() : number{
+    Count(): number {
         return this._data.length;
+    }
+    
+    GetAllRecords(): IRecord[] {
+        return this._data;
     }
 }

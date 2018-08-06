@@ -20,7 +20,7 @@ test('Remote Send', async () => {
     
     expect(data.Count()).toBe(0);
     fetchRequest["jsonResult"] = [{ id: 1, timestamp: 100000 }];
-    await sync.Sync();
+    await sync.Pull();
     expect(data.Count()).toBe(1);
 
 });
