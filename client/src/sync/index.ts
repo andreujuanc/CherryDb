@@ -27,8 +27,19 @@ export default class Sync {
         }
     }
 
-    async PollSync() {
+    async Push(){
+        try{
+            let pushData = await this._data.GetPushData();
+            let pushResult = await this._remote.Send(pushData);
+            await this._data.ClearPushData(pushResult);
+        }
+        catch (ex) {
+            throw ex;
+        }
+    }
 
+    async PollSync() {
+        await this.Push();
         await this.Pull();
         setTimeout(()=>this.PollSync(), 10000);
     }

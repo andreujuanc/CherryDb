@@ -1,9 +1,15 @@
 const polka = require('polka');
-const { json } = require('body-parser');
+const bodyParser = require('body-parser');
 
 function one(req, res, next) {
     req.hello = 'world';
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT");
+    res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With,  X-HTTP-Method-Override, Content-Type, Accept");
+    if (req.method === 'OPTIONS')
+        return res.end();
     console.log('DATA.length', DATA.length)
+    console.log(DATA)
     next();
 }
 
@@ -22,11 +28,15 @@ content-type: application/json
 
 {
     "id": "12",
-    "timestamp": "12345677891"
+    "timestamp": "12345677891",
+    "text": "hello"
 }
  */
 polka()
-    .use(json())
+    .use(bodyParser.urlencoded({
+        extended: true
+    }))
+    .use(bodyParser.json())
     .use(one, two)
     .get('/cherrydb/:id', (req, res) => {
         console.log(`~> Hello, ${req.hello}`);
@@ -42,22 +52,43 @@ polka()
         console.log('from', req.params.ts);
         const found = DATA.filter(x => x.timestamp > req.params.ts);
         if (found) {
+            //res.statusCode = 200 ;
+            res.writeHead(200, {
+                'Content-Type': 'application/json'
+            });
             res.end(JSON.stringify(found));
         }
         else {
+            res.statusCode = 200;
             res.end(JSON.stringify([]));
         }
     })
     .post('/cherrydb', (req, res) => {
+        console.log('POSTING');
         try {
-            let json = JSON.stringify(req.body); 
-            let data = JSON.parse(json);
-            DATA.push(data);
+            var records = req.body;
+            if (!Array.isArray(records))
+                records = [records];
+            let json = JSON.stringify(records, null, 2); //JSON.stringify(req.body); 
+            for (var i = 0; i < records.length; i++) {
+                if (records[i].id) {
+                    if(!records[i].timestamp)
+                        records[i].timestamp = Date.now();
+                    let index = DATA.findIndex(x => x.id == records[i].id);
+                    if (index >= 0)
+                        DATA[index] = records[i]
+                    else
+                        DATA.push(records[i]);
+                }
+            }
             console.log('posted', json);
-            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.writeHead(200, {
+                'Content-Type': 'application/json'
+            });
             res.end(json);
+            console.log('posted OK')
         } catch{
-            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.statusCode = 500;
             res.end();
         }
     })

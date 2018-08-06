@@ -10,9 +10,10 @@ export default class Store {
 
     private _data: IRecord[];
     private _push: IRecord[];
-    
+
     constructor() {
         this._data = [];
+        this._push = [];
     }
 
     GetLastRecord(): IRecord {
@@ -32,8 +33,10 @@ export default class Store {
     }
 
     private upsert(record: IRecord): IRecord {
-        if (record.id == null)
+        if (record.id == null) {
             record.id = this.uuidv4();
+            this._push.push(record);
+        }
         const index = this._data[record.id];
         if (index) {
             this._data[index] = record;
@@ -47,7 +50,7 @@ export default class Store {
     Upsert(records: IRecord | IRecord[]): IRecord[] | IRecord {
         if (records == null) return null; //TODO: throw?
         const isArray = Array.isArray(records);//DAMN TS COMPILER.
-        if (!Array.isArray(records)) { records = [ records] };
+        if (!Array.isArray(records)) { records = [records] };
 
         for (let i = 0; i < records.length; i++) {
             records[i] = this.upsert(records[i]);
@@ -61,8 +64,22 @@ export default class Store {
     Count(): number {
         return this._data.length;
     }
-    
+
     GetAllRecords(): IRecord[] {
         return this._data;
+    }
+
+    async ClearPushData(records: IRecord | IRecord[]) {
+        if (records == null) return;
+        if (!Array.isArray(records))
+            records = [records];
+        for (var i = 0; i < records.length; i++) {
+            let index = records.findIndex(x => x.id == records[i].id)
+            this._data.slice(index, 1);
+        }
+    }
+
+    async GetPushData(): Promise<IRecord | IRecord[]> {
+        return new Promise<IRecord[]>(x => x(this._push));
     }
 }
