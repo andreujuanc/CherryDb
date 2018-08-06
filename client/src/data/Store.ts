@@ -18,6 +18,7 @@ export default class Store {
 
     GetLastRecord(): IRecord {
         if (this._data.length === 0) return null;
+        if (this._data.length === 1) return this._data[0];
         return this._data.filter(x=>x.timestamp).reduce((a, b) => a.timestamp && b.timestamp && a.timestamp > b.timestamp ? a : b );    }
     GetLastRecordTimeStamp(): number {
         const lastRecord = this.GetLastRecord();
