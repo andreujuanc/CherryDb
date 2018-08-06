@@ -36,6 +36,10 @@ export default class Remote {
         if(Array.isArray(record) && record.length == 0 ) return Promise.resolve([]);
 
         //console.log('data', data)
+        /**
+         * Must do something like this to make it sexier!
+         * https://youtu.be/fRgFVNhSJEc?t=55m43s
+         */
         return this._request.fetch(`${this._endpoint}${this._path}`, {
             method: 'POST',
             mode:'cors',
