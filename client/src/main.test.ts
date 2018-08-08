@@ -11,11 +11,12 @@
 // jest.mock('../endpoint/FetchRequest');
 // const endpointURL = 'http://localhost:8765';
 import CherryDb from './main';
+import MemoryStore from './data/stores/MemoryStore';
 
-test('Main', async () => {
-   
-    expect(()=>new CherryDb(null)).toThrow();
-    expect(()=>new CherryDb(undefined)).toThrow();
-    expect(()=>new CherryDb('')).toThrow();
+test('Main constructor', async () => {
+    const store = new MemoryStore();
+    expect(()=>new CherryDb(null, store)).toThrow();
+    expect(()=>new CherryDb(undefined, store)).toThrow();
+    expect(()=>new CherryDb('', store)).toThrow();
 
 });
