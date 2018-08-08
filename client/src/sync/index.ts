@@ -1,13 +1,13 @@
-import Store from "../data/Store";
+import IStore from "../data/IStore";
 import Remote from "../endpoint/Remote";
 import { EventEmitter } from "events";
 
 export default class Sync {
-    private _data: Store;
+    private _data: IStore;
     private _remote: Remote;
     public OnSyncCompleted: Function;
 
-    constructor(data: Store, remote: Remote) {
+    constructor(data: IStore, remote: Remote) {
         this._data = data;
         this._remote = remote;
     }
