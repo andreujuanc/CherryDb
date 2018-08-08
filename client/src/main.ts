@@ -1,5 +1,5 @@
 import Sync from "./sync/index";
-import Store from "./data/Store";
+import Store from "./data/stores/MemoryStore";
 import IStore from "./data/IStore";
 import Remote from "./endpoint/Remote";
 import FetchRequest from "./endpoint/FetchRequest";

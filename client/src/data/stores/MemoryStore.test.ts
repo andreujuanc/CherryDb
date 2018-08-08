@@ -1,6 +1,6 @@
-import Store from './Store';
-import IRecord from './IRecord';
-import Record from './Record';
+import Store from './MemoryStore';
+import IRecord from '../IRecord';
+import Record from '../Record';
 
 const store = new Store();
 const records: IRecord[] = [

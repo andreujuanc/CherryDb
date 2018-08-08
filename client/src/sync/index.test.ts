@@ -5,7 +5,7 @@ import Record from '../data/Record';
 //import * as fetch from 'node-fetch'
 import IRequest from '../endpoint/IRequest';
 import FetchRequest from '../endpoint/FetchRequest';
-import Store from '../data/Store';
+import Store from '../data/stores/MemoryStore';
 import Sync from './index';
 
 jest.mock('../endpoint/FetchRequest');

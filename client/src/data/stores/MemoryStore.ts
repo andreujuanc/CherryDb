@@ -1,5 +1,5 @@
-import IRecord from "./IRecord";
-import IStore from "./IStore";
+import IRecord from "../IRecord";
+import IStore from "../IStore";
 
 export default class Store  implements IStore{
     uuidv4() {
