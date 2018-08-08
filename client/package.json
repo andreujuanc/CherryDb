@@ -1,6 +1,6 @@
 {
   "name": "cherrydb",
-  "version": "0.0.16",
+  "version": "0.0.4",
   "description": "A superfast alternative to pouchdb and azure mobile apps sdk.",
   "repository": "github:andreujuanc/CherryDb",
   "main": "./src/main.ts",
@@ -19,7 +19,8 @@
     "test:watch": "jest --watch",
     "preversion": "npm test",
     "version": "npm run build && git add . ",
-    "postversion": "git push && git push --tags "
+    "postversion": "git push && git push --tags",
+    "deploy:patch": "npm version patch -m \"version %s\""
   },
   "author": "Juan C. Andreu <andreujuanc@gmail.com> (https://andr.eu)",
   "license": "MIT",
