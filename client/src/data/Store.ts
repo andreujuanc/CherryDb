@@ -16,10 +16,12 @@ export default class Store {
         this._push = [];
     }
 
-    GetLastRecord(): IRecord {
-        if (this._data.length === 0) return null;
-        if (this._data.length === 1) return this._data[0];
-        return this._data.filter(x=>x.timestamp).reduce((a, b) => a.timestamp && b.timestamp && a.timestamp > b.timestamp ? a : b );    }
+    GetLastRecord(): IRecord {        
+        const filtered = this._data.filter(x => x.timestamp);
+        if (filtered.length === 0) return null;
+        if (filtered.length === 1) return this._data[0];
+        return filtered.reduce((a, b) => a.timestamp && b.timestamp && a.timestamp > b.timestamp ? a : b);
+    }
     GetLastRecordTimeStamp(): number {
         const lastRecord = this.GetLastRecord();
         if (lastRecord == null)
@@ -37,7 +39,7 @@ export default class Store {
             record.id = this.uuidv4();
             this._push.push(record);
         }
-        const index = this._data.findIndex(x=>x.id == record.id);
+        const index = this._data.findIndex(x => x.id == record.id);
         if (index >= 0) {
             this._data[index] = record;
         }
