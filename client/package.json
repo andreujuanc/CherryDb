@@ -1,11 +1,16 @@
 {
   "name": "cherrydb",
-  "version": "0.0.3",
+  "version": "0.0.7",
   "description": "A superfast alternative to pouchdb and azure mobile apps sdk.",
   "repository": "github:andreujuanc/CherryDb",
   "main": "./src/main.ts",
   "keywords": [
-    "javascript", "javascript-library", "database", "sync", "data", "synchronization"
+    "javascript",
+    "javascript-library",
+    "database",
+    "sync",
+    "data",
+    "synchronization"
   ],
   "scripts": {
     "build": "rollup -c",
