@@ -5,7 +5,7 @@ export default interface IStore {
     GetLastRecord(): IRecord ;
     GetLastRecordTimeStamp(): number;
     GetRecordById(id: string): IRecord;
-    GetAllRecords(): IRecord[];
+    GetAllRecords(): Promise<IRecord[]>;
     
     Upsert(records: IRecord | IRecord[]): IRecord[] | IRecord;
     Count(): number;

@@ -1,18 +1,14 @@
 import IRecord from "../IRecord";
 import IStore from "../IStore";
+import StoreBase from "./StoreBase";
 
-export default class Store  implements IStore{
-    uuidv4() {
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-            return v.toString(16);
-        });
-    }
+export default class Store extends StoreBase implements IStore{
 
     private _data: IRecord[];
     private _push: IRecord[];
 
     constructor() {
+        super();
         this._data = [];
         this._push = [];
     }
@@ -68,8 +64,8 @@ export default class Store  implements IStore{
         return this._data.length;
     }
 
-    GetAllRecords(): IRecord[] {
-        return this._data;
+    async GetAllRecords(): Promise<IRecord[]> {
+        return Promise.resolve(this._data);
     }
 
     async ClearPushData(records: IRecord | IRecord[]) {
