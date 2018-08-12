@@ -16,7 +16,8 @@ export default class IndexDbStore extends StoreBase implements IStore {
 
     async Initialize(): Promise<any> {
         return new Promise<any>((resolve, reject) => {
-            let request = window.indexedDB.open(this._dbName, 1);
+            
+            let request = indexedDB.open(this._dbName, 1);
             request.onsuccess = (event) => {
                 this.db = request.result;
                 resolve(event)

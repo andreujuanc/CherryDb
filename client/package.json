@@ -16,7 +16,8 @@
     "build": "rollup -c",
     "build:dev": "rollup -c -w",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "init": "tsc --init"
   },
   "author": "Juan C. Andreu <andreujuanc@gmail.com> (https://andr.eu)",
   "license": "MIT",

@@ -6,7 +6,10 @@
         "noEmitOnError": true,
         "allowJs": true,
         "importHelpers": true,
-        "target": "es2017"
+        "target": "es2017",
+        "lib": [
+            "es2018", "webworker"
+        ],
     },
     "include": [
         "src"
