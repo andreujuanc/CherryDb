@@ -53,5 +53,8 @@
         "tsConfigFile": "tsconfig.jest.json"
       }
     }
+  },
+  "dependencies": {
+    "fake-indexeddb": "^2.0.4"
   }
 }

@@ -1,33 +1,49 @@
 import IStore from "../IStore";
 import StoreBase from "./StoreBase";
 import IRecord from "../IRecord";
-import { resolve } from "url";
+//import localforage from "localforage";
+
 
 export default class IndexDbStore extends StoreBase implements IStore {
 
     private db: IDBDatabase;
+    private _dbName: string;
     private objectStore = 'cherrydb';
     constructor(dbName: string) {
         super();
-        let openRequest = window.indexedDB.open(dbName, 1);
-        openRequest.onsuccess = () => {
-            this.db = openRequest.result as IDBDatabase;
-        };
+        this._dbName = dbName;
+    }
+
+    async Initialize(): Promise<any> {
+        return new Promise<any>((resolve, reject) => {
+            let request = window.indexedDB.open(this._dbName, 1);
+            request.onsuccess = (event) => {
+                this.db = request.result;
+                resolve(event)
+            };
+            request.onerror = (event) => reject(event);
+        });
     }
 
     async GetAllRecords(): Promise<IRecord[]> {
         return new Promise<IRecord[]>((resolve, reject) => {
-            var tranaction = this.db.transaction(this.objectStore);
-            var store = tranaction.objectStore(this.objectStore);
-            var request = store.get('');
-            request.onsuccess = () => {
-                resolve(request.result);
-            }
-        })
+            var tx = this.db.transaction(this._dbName);
+            var store = this.db.createObjectStore(this._dbName);
+            //var store = tx.objectStore('store');
+            var myIndex = store.index('index');
+            
+            //Can someone tell me how to fix this?
+            //Thought it was part of the webworkers types
+            // @ts-ignore
+            var getAllKeysRequest = myIndex.getAllKeys();
+            getAllKeysRequest.onsuccess = function () {
+                resolve(getAllKeysRequest.result);
+            };
+        });
     }
 
-    GetLastRecord(): IRecord {    
-        throw new Error('not implemented');    
+    GetLastRecord(): IRecord {
+        throw new Error('not implemented');
     }
     GetLastRecordTimeStamp(): number {
         throw new Error('not implemented');

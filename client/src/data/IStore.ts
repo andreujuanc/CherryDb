@@ -1,6 +1,8 @@
 import IRecord from "./IRecord";
 
 export default interface IStore {
+
+    Initialize() : Promise<any>;
     
     GetLastRecord(): IRecord ;
     GetLastRecordTimeStamp(): number;

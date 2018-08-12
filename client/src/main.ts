@@ -4,7 +4,6 @@ import IStore from "./data/IStore";
 import Remote from "./endpoint/Remote";
 import FetchRequest from "./endpoint/FetchRequest";
 import IRecord from "./data/IRecord";
-import { resolve } from "dns";
 
 export default class CheeryDb {
     private _sync: Sync;

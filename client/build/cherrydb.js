@@ -55,90 +55,6 @@
         }
     }
 
-    class Store {
-        constructor() {
-            this._data = [];
-            this._push = [];
-        }
-        uuidv4() {
-            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-                var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-                return v.toString(16);
-            });
-        }
-        GetLastRecord() {
-            const filtered = this._data.filter(x => x.timestamp);
-            if (filtered.length === 0)
-                return null;
-            if (filtered.length === 1)
-                return this._data[0];
-            return filtered.reduce((a, b) => a.timestamp && b.timestamp && a.timestamp > b.timestamp ? a : b);
-        }
-        GetLastRecordTimeStamp() {
-            const lastRecord = this.GetLastRecord();
-            if (lastRecord == null)
-                return 0;
-            return lastRecord.timestamp;
-        }
-        GetRecordById(id) {
-            if (id == null)
-                return null; //TODO: throw?
-            return this._data.find(x => x.id == id);
-        }
-        upsert(record) {
-            if (record.id == null) {
-                record.id = this.uuidv4();
-                this._push.push(record);
-            }
-            const index = this._data.findIndex(x => x.id == record.id);
-            if (index >= 0) {
-                this._data[index] = record;
-            }
-            else {
-                this._data.push(record);
-            }
-            return record;
-        }
-        Upsert(records) {
-            if (records == null)
-                return null; //TODO: throw?
-            const isArray = Array.isArray(records); //DAMN TS COMPILER.
-            if (!Array.isArray(records)) {
-                records = [records];
-            }
-            for (let i = 0; i < records.length; i++) {
-                records[i] = this.upsert(records[i]);
-            }
-            if (isArray)
-                return records;
-            else
-                return records[0];
-        }
-        Count() {
-            return this._data.length;
-        }
-        GetAllRecords() {
-            return this._data;
-        }
-        ClearPushData(records) {
-            return __awaiter(this, void 0, void 0, function* () {
-                if (records == null)
-                    return;
-                if (!Array.isArray(records))
-                    records = [records];
-                for (var i = 0; i < records.length; i++) {
-                    let index = records.findIndex(x => x.id == records[i].id);
-                    this._push.slice(index, 1);
-                }
-            });
-        }
-        GetPushData() {
-            return __awaiter(this, void 0, Promise, function* () {
-                return new Promise(x => x(this._push));
-            });
-        }
-    }
-
     class Record {
     }
 
@@ -207,7 +123,7 @@
     }
 
     class CheeryDb {
-        constructor(endpoint) {
+        constructor(endpoint, store) {
             this._started = false;
             this._onChangeCallbacks = [];
             if (endpoint == null)
@@ -216,7 +132,7 @@
                 throw new Error('First argument "endpoint" must be a valid url');
             if (endpoint.length < 3)
                 throw new Error('First argument "endpoint" must be a valid url');
-            this._store = new Store();
+            this._store = store;
             this._fetchRequest = new FetchRequest();
             this._remote = new Remote(endpoint, this._fetchRequest);
             this._sync = new Sync(this._store, this._remote);

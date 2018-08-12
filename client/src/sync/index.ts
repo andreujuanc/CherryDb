@@ -1,6 +1,5 @@
 import IStore from "../data/IStore";
 import Remote from "../endpoint/Remote";
-import { EventEmitter } from "events";
 
 export default class Sync {
     private _data: IStore;
