@@ -16,8 +16,8 @@ beforeAll(x=>{
 })
 
 describe("Store", () => {
-    test('last record', () => {
-        const lastRecordStored = store.GetLastRecord();
+    test('last record', async () => {
+        const lastRecordStored = await store.GetLastRecord();
         expect(lastRecordStored.id).toBe('0003');
     });
 
@@ -25,10 +25,11 @@ describe("Store", () => {
         expect(store.Count()).toBe(records.length);
     });
 
-    test('GetRecordById', () => {
+    test('GetRecordById', async () => {
         let store = new Store();
-        let storedItem = store.Upsert([new Record()])[0]
-        const record = store.GetRecordById(storedItem.id);
+        let result = await store.Upsert([new Record()]) as Record[];
+        let storedItem = result[0];
+        const record = await store.GetRecordById(storedItem.id);
         expect(record.id).toBe(storedItem.id);
         // expect(lastRecord).toBeInstanceOf(Item);
     });

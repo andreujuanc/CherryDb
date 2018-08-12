@@ -3,6 +3,9 @@ import IStore from "../IStore";
 import StoreBase from "./StoreBase";
 
 export default class Store extends StoreBase implements IStore{
+    Initialize(): Promise<any> {
+        return;
+    }
 
     private _data: IRecord[];
     private _push: IRecord[];
@@ -13,22 +16,22 @@ export default class Store extends StoreBase implements IStore{
         this._push = [];
     }
 
-    GetLastRecord(): IRecord {        
+    async GetLastRecord(): Promise<IRecord> {        
         const filtered = this._data.filter(x => x.timestamp);
         if (filtered.length === 0) return null;
         if (filtered.length === 1) return this._data[0];
         return filtered.reduce((a, b) => a.timestamp && b.timestamp && a.timestamp > b.timestamp ? a : b);
     }
-    GetLastRecordTimeStamp(): number {
-        const lastRecord = this.GetLastRecord();
+    async GetLastRecordTimeStamp(): Promise<number> {
+        const lastRecord = await this.GetLastRecord();
         if (lastRecord == null)
             return 0;
-        return lastRecord.timestamp;
+        return Promise.resolve(lastRecord.timestamp);
     }
 
-    GetRecordById(id: string): IRecord {
+    GetRecordById(id: string): Promise<IRecord> {
         if (id == null) return null; //TODO: throw?
-        return this._data.find(x => x.id == id);
+        return Promise.resolve(this._data.find(x => x.id == id));
     }
 
     private upsert(record: IRecord): IRecord {
@@ -46,7 +49,7 @@ export default class Store extends StoreBase implements IStore{
         return record;
     }
 
-    Upsert(records: IRecord | IRecord[]): IRecord[] | IRecord {
+    Upsert(records: IRecord | IRecord[]): Promise<IRecord[] | IRecord> {
         if (records == null) return null; //TODO: throw?
         const isArray = Array.isArray(records);//DAMN TS COMPILER.
         if (!Array.isArray(records)) { records = [records] };
@@ -55,9 +58,9 @@ export default class Store extends StoreBase implements IStore{
             records[i] = this.upsert(records[i]);
         }
         if (isArray)
-            return records;
+            return Promise.resolve(records);
         else
-            return records[0];
+            return Promise.resolve(records[0]);
     }
 
     Count(): number {
@@ -73,7 +76,7 @@ export default class Store extends StoreBase implements IStore{
         if (!Array.isArray(records))
             records = [records];
         for (var i = 0; i < records.length; i++) {
-            let index = records.findIndex(x => x.id == records[i].id)
+            let index = records.findIndex(x => x.id == (records as IRecord[])[i].id)
             this._push.slice(index, 1);
         }
     }
