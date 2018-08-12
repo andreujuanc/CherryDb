@@ -4,12 +4,15 @@ import typescript from 'rollup-plugin-typescript';
 export default {
     input   : './src/main.ts',    
     output: {
-        format: "umd",
+        format: "es",
         name: "cherrydbcient",
         file: './build/cherrydb.js',
         sourcemap: true
     },
     plugins: [
-        typescript()
+        typescript({
+            typescript: require('typescript'),
+            target: "ES2017"
+        })
     ]
 }
