@@ -34,7 +34,7 @@ export default class IndexDbStore extends StoreBase implements IStore {
             
             //Can someone tell me how to fix this?
             //Thought it was part of the webworkers types
-            // @ts-ignore
+            
             var getAllKeysRequest = myIndex.getAllKeys();
             getAllKeysRequest.onsuccess = function () {
                 resolve(getAllKeysRequest.result);

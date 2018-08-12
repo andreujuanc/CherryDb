@@ -5,9 +5,8 @@
         "noImplicitAny": true,
         "noEmitOnError": true,
         "allowJs": true,
-        "lib": ["dom", "es2015.promise", "es5"],
         "importHelpers": true,
-        "target": "es5"
+        "target": "es2017"
     },
     "include": [
         "src"

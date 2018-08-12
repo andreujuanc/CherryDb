@@ -1,5 +1,6 @@
 // rollup.config.js
 import typescript from 'rollup-plugin-typescript';
+import resolve from 'rollup-plugin-node-resolve';
 
 export default {
     input   : './src/main.ts',    
@@ -12,7 +13,8 @@ export default {
     plugins: [
         typescript({
             typescript: require('typescript'),
-            target: "ES2017"
-        })
+            target: "es5"
+        }),
+        resolve()
     ]
 }
