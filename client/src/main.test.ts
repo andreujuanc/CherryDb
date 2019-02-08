@@ -10,8 +10,9 @@
 
 // jest.mock('../endpoint/FetchRequest');
 // const endpointURL = 'http://localhost:8765';
-import CherryDb from './main';
-import MemoryStore from './data/stores/MemoryStore';
+import CherryDb, { MemoryStore } from './main';
+
+//import MemoryStore from './data/stores/MemoryStore';
 
 test('Main constructor', async () => {
     const store = new MemoryStore();

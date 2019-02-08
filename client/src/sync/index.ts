@@ -13,7 +13,7 @@ export default class Sync {
 
     async Pull() {
         try {
-            const TS = this._data.GetLastRecordTimeStamp();
+            const TS = await this._data.GetLastRecordTimeStamp();
             //console.log('Last record', lastRecord)
             const remoteData = await this._remote.getNewRecordsFrom(TS);
             this._data.Upsert(remoteData);
@@ -26,11 +26,15 @@ export default class Sync {
         }
     }
 
-    async Push(){
-        try{
+    async Push() {
+        try {
             let pushData = await this._data.GetPushData();
-            let pushResult = await this._remote.Send(pushData);
-            await this._data.ClearPushData(pushResult);
+            if (pushData.length > 0) {
+                let pushResult = await this._remote.Send(pushData);
+                if (!Array.isArray(pushResult))
+                    pushResult = [pushResult]
+                await this._data.ClearPushData(pushResult);
+            }
         }
         catch (ex) {
             throw ex;
@@ -40,6 +44,6 @@ export default class Sync {
     async PollSync() {
         await this.Push();
         await this.Pull();
-        setTimeout(()=>this.PollSync(), 2000);
+        setTimeout(() => this.PollSync(), 2000);
     }
 }

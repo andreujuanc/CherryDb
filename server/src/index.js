@@ -64,16 +64,23 @@ polka()
         }
     })
     .post('/cherrydb', (req, res) => {
-        //console.log('POSTING');
+        
         try {
             var records = req.body;
             if (!Array.isArray(records))
                 records = [records];
-            let json = JSON.stringify(records, null, 2); //JSON.stringify(req.body); 
+            
             for (var i = 0; i < records.length; i++) {
                 if (records[i].id) {
-                    if(!records[i].timestamp)
+                    if (records[i].deleted === true) {
+                        console.log('deleting item', records[i]);
                         records[i].timestamp = Date.now();
+                    }
+                    else if (!records[i].timestamp) {
+                        console.log('creating item', records[i]);
+                        records[i].timestamp = Date.now();
+                    }
+
                     let index = DATA.findIndex(x => x.id == records[i].id);
                     if (index >= 0)
                         DATA[index] = records[i]
@@ -81,6 +88,7 @@ polka()
                         DATA.push(records[i]);
                 }
             }
+            let json = JSON.stringify(records, null, 2); //JSON.stringify(req.body); 
             //console.log('posted', json);
             res.writeHead(200, {
                 'Content-Type': 'application/json'
