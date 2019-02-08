@@ -1,6 +1,6 @@
 {
-  "name": "TODO",
-  "description": "TODO",
+  "name": "CherryDB Demo",
+  "description": "CherryDB Demo",
   "version": "0.0.1",
   "scripts": {
     "dev": "sapper dev",
