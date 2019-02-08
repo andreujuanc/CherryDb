@@ -4,74 +4,38 @@
 
 <h1>CherryDb demo</h1>
 
-<input type="text" bind:value="newItemText" />
-<button on:click=send()>
-	Send
-</button>
-<button on:click=deleteAll()>
-	Delete all
-</button>
-<h4>Total Items: {items.length}</h4>
-<ul>
-	{#each items as item}
-	<li>
-		{item.id} - {item.text} - { item.timestamp } - { item.deleted }
-	</li>
-	{/each}
-</ul>
+<div class="container">
+    <div class="column">
+        <iframe src="/list" title="leftPage"></iframe>
+    </div>
+    <div class="column">
+        <iframe src="/list" title="rightPage"></iframe>
+    </div>
+</div>
 
-<script>
-	import CherryDb, { MemoryStore } from '../../client/build/cherrydb'
-	const db = new CherryDb('http://localhost:8765', new MemoryStore());
-	let store = db.getStore();
-	const colors = ['red', 'blue', 'green', 'purple', 'yellow', 'pink']
-	export default {
-		data() {
-			return {
-				newItemText: '',
-				items: []
-			}
-		},
-		oncreate() {
-			db.Start(() => this.updateUI());
-		},
-		methods: {
-			insertItems(n) {
-				for (let i = 0; i < n; i++) {
-					const newItem = db.Upsert({
-						text: `Item ${i}`,
-						color: colors[parseInt(Math.random() * colors.length)]
-					});
-				}
-			},
-			updateUI() {
-				console.log('le callback', store.GetAllRecords())
-				store.GetAllRecords()
-					.then((records) => {
-						this.set({
-							items: records
-						})
-						let { items } = this.get();
-						console.log('newthingy', items)
-					});
-			},
-			send() {
-				const { newItemText } = this.get();
-				if (newItemText.length === 0) return;
-				const newItem = db.Upsert({
-					text: newItemText
-				});
-				this.updateUI();
-				this.set({ newItemText: '' })
-			},
-			deleteAll() {
-				store.GetAllRecords()
-					.then((records) => {
-						debugger;
-						db.Delete(x => records.findIndex(r => r.id === x.id) >= 0)
-					})
+<style>
+    .container{
+        width: 100%;
+        position: relative;
+        margin:0;
+        padding: 0;
+        border: none;
+        height: 100%;
+    }
 
-			}
-		}
-	}
-</script>
+    .column{
+        width: calc(50% - 5px);
+        height: 100%;
+        margin:0;
+        padding: 0;
+        border: 1px solid grey;
+        border: 1px solid grey;
+        display: inline-block;
+        position: relative;
+    }
+    .column iframe{
+        border: none;
+        width: 98%;
+        height: 100%;
+    }
+</style>

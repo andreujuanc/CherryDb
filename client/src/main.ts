@@ -45,6 +45,6 @@ export default class CheeryDb {
     }
 
     async Delete(predicate: (record: IRecord) => boolean) : Promise<void> {
-        return await this._store.Delete(predicate);
+        await this._store.Delete(predicate);
     }
 }
