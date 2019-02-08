@@ -1,6 +1,6 @@
 {
-  "name": "TODO",
-  "description": "TODO",
+  "name": "cherrydb-demo-site",
+  "description": "CherryDb demo site",
   "version": "0.0.1",
   "scripts": {
     "dev": "sapper dev",
@@ -12,7 +12,7 @@
     "test": "run-p --race dev cy:run"
   },
   "dependencies": {
-    "cherrydb": "0.0.8",
+    "cherrydb": "0.0.10",
     "compression": "^1.7.1",
     "polka": "^0.4.0",
     "sirv": "^0.2.0"

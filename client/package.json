@@ -3,7 +3,7 @@
   "version": "0.0.10",
   "description": "A superfast alternative to pouchdb and azure mobile apps sdk.",
   "repository": "github:andreujuanc/CherryDb",
-  "main": "./src/main.ts",
+  "main": "./build/cherrydb.js",
   "keywords": [
     "javascript",
     "javascript-library",
