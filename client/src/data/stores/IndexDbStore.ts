@@ -40,7 +40,7 @@ export default class IndexDbStore extends StoreBase implements IStore {
     async GetAllRecords(): Promise<IRecord[]> {
         return new Promise<IRecord[]>((resolve, reject) => {
             let store = this.db.transaction([this._objectStoreName])
-                            .objectStore(this._objectStoreName);
+                .objectStore(this._objectStoreName);
             var myIndex = store.index('id');
             var getAllKeysRequest = myIndex.getAll();
             getAllKeysRequest.onsuccess = function () {
@@ -61,10 +61,11 @@ export default class IndexDbStore extends StoreBase implements IStore {
             let store = this.db.transaction([this._objectStoreName])
                 .objectStore(this._objectStoreName);
             let request = store.getKey(id);
-            request.onsuccess = (result) => resolve(request.result);
+            request.onsuccess = (event) => { resolve((typeof request.result ==='string' ? JSON.parse(request.result as string)  : request.result) as IRecord) };
             request.onerror = (error) => reject(error);
         });
     }
+
 
     private async upsert(record: IRecord): Promise<IRecord> {
         return new Promise<IRecord>(async (resolve, reject) => {
@@ -115,11 +116,15 @@ export default class IndexDbStore extends StoreBase implements IStore {
         throw new Error('Count not implemented');
     }
 
-    async ClearPushData(records: IRecord | IRecord[]) {
+    async ClearPushData(records: IRecord[]) {
         throw new Error('ClearPushData not implemented');
     }
 
-    async GetPushData(): Promise<IRecord | IRecord[]> {
+    async GetPushData(): Promise<IRecord[]> {
         throw new Error('GetPushData not implemented');
+    }
+
+    Delete(predicate: (record: IRecord) => boolean): Promise<void> {
+        throw new Error("Method not implemented.");
     }
 }

@@ -1,5 +1,5 @@
 {
-  "name": "CherryDB Demo",
+  "name": "cherrydb-demo",
   "description": "CherryDB Demo",
   "version": "0.0.1",
   "scripts": {
@@ -14,9 +14,9 @@
   },
   "dependencies": {
     "compression": "^1.7.1",
-    "polka": "^0.4.0",
-    "sapper": "^0.15.0",
-    "sirv": "^0.1.1"
+    "polka": "^0.5.1",
+    "sapper": "^0.25.0",
+    "sirv": "^0.2.2"
   },
   "devDependencies": {
     "concurrently": "^4.1.0",
