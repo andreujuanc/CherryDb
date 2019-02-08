@@ -1,9 +1,12 @@
 # sapper-template
 
-The default [Sapper](https://github.com/sveltejs/sapper) template. To clone it and get started:
+The default [Sapper](https://github.com/sveltejs/sapper) template, with branches for Rollup and webpack. To clone it and get started:
 
 ```bash
-npx degit sveltejs/sapper-template my-app
+# for Rollup
+npx degit sveltejs/sapper-template#rollup my-app
+# for webpack
+npx degit sveltejs/sapper-template#webpack my-app
 cd my-app
 npm install # or yarn!
 npm run dev
@@ -16,28 +19,15 @@ Consult [sapper.svelte.technology](https://sapper.svelte.technology) for help ge
 
 ## Structure
 
-Sapper expects to find three directories in the root of your project —  `app`, `assets` and `routes`.
+Sapper expects to find two directories in the root of your project —  `src` and `static`.
 
 
-### app
+### src
 
-The [app](app) directory contains the entry points for your app — `client.js`, `server.js` and (optionally) a `service-worker.js` — along with a `template.html` file.
-
-
-### assets
-
-The [assets](assets) directory contains any static assets that should be available. These are served using [sirv](https://github.com/lukeed/sirv).
-
-In your [service-worker.js](app/service-worker.js) file, you can import these as `assets` from the generated manifest...
-
-```js
-import { assets } from './manifest/service-worker.js';
-```
-
-...so that you can cache them (though you can choose not to, for example if you don't want to cache very large files).
+The [src](src) directory contains the entry points for your app — `client.js`, `server.js` and (optionally) a `service-worker.js` — along with a `template.html` file and a `routes` directory.
 
 
-### routes
+#### src/routes
 
 This is the heart of your Sapper app. There are two kinds of routes — *pages*, and *server routes*.
 
@@ -47,19 +37,32 @@ This is the heart of your Sapper app. There are two kinds of routes — *pages*,
 
 There are three simple rules for naming the files that define your routes:
 
-* A file called `routes/about.html` corresponds to the `/about` route. A file called `routes/blog/[slug].html` corresponds to the `/blog/:slug` route, in which case `params.slug` is available to the route
-* The file `routes/index.html` (or `routes/index.js`) corresponds to the root of your app. `routes/about/index.html` is treated the same as `routes/about.html`.
-* Files and directories with a leading underscore do *not* create routes. This allows you to colocate helper modules and components with the routes that depend on them — for example you could have a file called `routes/_helpers/datetime.js` and it would *not* create a `/_helpers/datetime` route
+* A file called `src/routes/about.html` corresponds to the `/about` route. A file called `src/routes/blog/[slug].html` corresponds to the `/blog/:slug` route, in which case `params.slug` is available to the route
+* The file `src/routes/index.html` (or `src/routes/index.js`) corresponds to the root of your app. `src/routes/about/index.html` is treated the same as `src/routes/about.html`.
+* Files and directories with a leading underscore do *not* create routes. This allows you to colocate helper modules and components with the routes that depend on them — for example you could have a file called `src/routes/_helpers/datetime.js` and it would *not* create a `/_helpers/datetime` route
 
 
-## Webpack config
+### static
 
-Sapper uses webpack to provide code-splitting, dynamic imports and hot module reloading, as well as compiling your Svelte components. As long as you don't do anything daft, you can edit the configuration files to add whatever loaders and plugins you'd like.
+The [static](static) directory contains any static assets that should be available. These are served using [sirv](https://github.com/lukeed/sirv).
+
+In your [service-worker.js](app/service-worker.js) file, you can import these as `files` from the generated manifest...
+
+```js
+import { files } from '../__sapper__/service-worker.js';
+```
+
+...so that you can cache them (though you can choose not to, for example if you don't want to cache very large files).
+
+
+## Bundler config
+
+Sapper uses Rollup or webpack to provide code-splitting and dynamic imports, as well as compiling your Svelte components. With webpack, it also provides hot module reloading. As long as you don't do anything daft, you can edit the configuration files to add whatever plugins you'd like.
 
 
 ## Production mode and deployment
 
-To start a production version of your app, run `npm run build && npm start`. This will disable hot module replacement, and activate the appropriate webpack plugins.
+To start a production version of your app, run `npm run build && npm start`. This will disable live reloading, and activate the appropriate bundler plugins.
 
 You can deploy your application to any environment that supports Node 8 or above. As an example, to deploy to [Now](https://zeit.co/now), run these commands:
 
@@ -69,7 +72,7 @@ now
 ```
 
 
-## Using external components
+## Using external components with webpack
 
 When using Svelte components installed from npm, such as [@sveltejs/svelte-virtual-list](https://github.com/sveltejs/svelte-virtual-list), Svelte needs the original component source (rather than any precompiled JavaScript that ships with the component). This allows the component to be rendered server-side, and also keeps your client-side app smaller.
 

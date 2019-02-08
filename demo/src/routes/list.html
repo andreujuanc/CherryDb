@@ -15,7 +15,7 @@
 </ul>
 
 <script>
-	import CherryDb, { MemoryStore } from '../../client/build/cherrydb'
+	import CherryDb, { MemoryStore } from 'cherrydb'
 	const db = new CherryDb('http://localhost:8765', new MemoryStore());
 	let store = db.getStore();
 	const colors = ['red', 'blue', 'green', 'purple', 'yellow', 'pink']

@@ -5,7 +5,7 @@ import resolve from 'rollup-plugin-node-resolve';
 export default {
     input   : './src/main.ts',    
     output: {
-        format: "es",
+        format: "umd",
         name: "cherrydbcient",
         file: './build/cherrydb.js',
         sourcemap: true
