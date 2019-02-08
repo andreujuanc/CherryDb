@@ -3,7 +3,7 @@ import Record from "../data/Record";
 import IRequest from "./IRequest";
 //import { Promise } from "es6-promise";
 
-const mapToRecord = (item) => Object.assign(new Record(), item);
+const mapToRecord = (item: any) => Object.assign(new Record(), item);
 
 export default class Remote {
 

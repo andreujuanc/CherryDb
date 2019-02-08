@@ -16,12 +16,13 @@ test('Remote Send', async () => {
     };
 
     var request = new FetchRequest();
-    request["jsonResult"] = newItem;
+
+    // @ts-ignore
+    request.jsonResult = newItem; 
+
     let remote = new Remote(endpointURL, request);
-
     var storedItem = await remote.Send(newItem);
-    //console.log('storedItem', storedItem)
 
-    expect(storedItem.id).toEqual(newItem.id);
+    expect(storedItem).toEqual(newItem);
     // expect(lastRecord).toBeInstanceOf(Item);
 });
