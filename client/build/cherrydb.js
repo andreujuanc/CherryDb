@@ -159,7 +159,6 @@
     var mapToRecord = function (item) { return Object.assign(new Record(), item); };
     var Remote = /** @class */ (function () {
         function Remote(endpoint, request) {
-            this._path = '/cherrydb';
             this._endpoint = endpoint;
             this._request = request;
         }
@@ -168,7 +167,7 @@
                 var response, items;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
-                        case 0: return [4 /*yield*/, this._request.fetch("" + this._endpoint + this._path + "/from/" + timestamp, {
+                        case 0: return [4 /*yield*/, this._request.fetch(this._endpoint + "?from=" + timestamp, {
                             // mode:'no-cors'
                             })];
                         case 1:
@@ -201,7 +200,7 @@
                      * Must do something like this to make it sexier!
                      * https://youtu.be/fRgFVNhSJEc?t=55m43s
                      */
-                    return [2 /*return*/, this._request.fetch("" + this._endpoint + this._path, {
+                    return [2 /*return*/, this._request.fetch("" + this._endpoint, {
                             method: 'POST',
                             mode: 'cors',
                             headers: {
