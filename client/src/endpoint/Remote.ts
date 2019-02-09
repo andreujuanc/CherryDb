@@ -9,7 +9,6 @@ export default class Remote {
 
     private _endpoint: string;
     private _request: IRequest;
-    private _path: string = '/cherrydb';
 
     constructor(endpoint: string, request: IRequest) {
         this._endpoint = endpoint;
@@ -17,7 +16,7 @@ export default class Remote {
     }
 
     async getNewRecordsFrom(timestamp: number): Promise<Record[]> {
-        let response = await this._request.fetch(`${this._endpoint}${this._path}/from/${timestamp}`, {
+        let response = await this._request.fetch(`${this._endpoint}?from=${timestamp}`, {
            // mode:'no-cors'
         });
         if (!response.ok)
@@ -40,7 +39,7 @@ export default class Remote {
          * Must do something like this to make it sexier!
          * https://youtu.be/fRgFVNhSJEc?t=55m43s
          */
-        return this._request.fetch(`${this._endpoint}${this._path}`, {
+        return this._request.fetch(`${this._endpoint}`, {
             method: 'POST',
             mode:'cors',
             headers: {
