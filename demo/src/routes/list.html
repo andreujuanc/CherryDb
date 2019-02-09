@@ -16,7 +16,8 @@
 
 <script>
 	import CherryDb, { MemoryStore } from 'cherrydb'
-	const db = new CherryDb('http://localhost:3000/cherrydb.json', new MemoryStore());
+	let url = typeof location !== 'undefined' ? location.origin : '/';
+	const db = new CherryDb(`${url}/cherrydb.json`, new MemoryStore());
 	let store = db.getStore();
 	const colors = ['red', 'blue', 'green', 'purple', 'yellow', 'pink']
 	export default {

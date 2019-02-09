@@ -6,7 +6,13 @@ import * as sapper from '../__sapper__/server.js';
 const { PORT, NODE_ENV } = process.env;
 const dev = NODE_ENV === 'development';
 
+import bodyParser from 'body-parser';
+
 polka() // You can also use Express
+	.use(bodyParser.urlencoded({
+		extended: true
+	}))
+	.use(bodyParser.json())
 	.use(
 		compression({ threshold: 0 }),
 		sirv('static', { dev }),

@@ -12,7 +12,8 @@
     "test": "run-p --race dev cy:run"
   },
   "dependencies": {
-    "cherrydb": "0.0.12",
+    "body-parser": "^1.18.3",
+    "cherrydb": "0.0.14",
     "compression": "^1.7.1",
     "polka": "^0.4.0",
     "sirv": "^0.2.0"
