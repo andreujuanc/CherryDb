@@ -1,18 +1,31 @@
-<input type="text" bind:value="newItemText" />
-<button on:click=send()>
-	Send
-</button>
-<button on:click=deleteAll()>
-	Delete all
-</button>
-<h4>Total Items: {items.length}</h4>
-<ul>
-	{#each items as item}
-	<li>
-		{item.id} - {item.text} - { item.timestamp } - { item.deleted } - <button on:click=deleteItem(item) >Delete</button>
-	</li>
-	{/each}
-</ul>
+<form on:submit=send(event)>
+	<input type="text" bind:value="newItemText" />
+	<button class="primary" on:click=send(event)>
+		Send
+	</button>
+	<button on:click=deleteAll()>
+		Delete all
+	</button>
+</form>
+<table>
+	<caption>
+		<h4>Total Items: {items.length}</h4>
+	</caption>
+	<thead>
+		<tr>
+			<th>Item</th>
+			<th>Timestamp</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		{#each items as item}
+		<tr>
+			<td data-label="Item">{item.text}</td> <td> { item.timestamp } </td><td> <button class="secondary" on:click=deleteItem(item) >Delete</button></td>
+		</tr>
+		{/each}
+	</tbody>
+</table>
 
 <script>
 	import CherryDb, { MemoryStore } from 'cherrydb'
@@ -50,7 +63,8 @@
 						console.log('newthingy', items)
 					});
 			},
-			send() {
+			send(event) {
+				event.preventDefault();
 				const { newItemText } = this.get();
 				if (newItemText.length === 0) return;
 				const newItem = db.Upsert({

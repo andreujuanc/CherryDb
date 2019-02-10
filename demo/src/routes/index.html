@@ -1,41 +1,50 @@
 <svelte:head>
-	<title>Sapper project template</title>
+    <title>Sapper project template</title>
 </svelte:head>
 
-<h1>CherryDb demo</h1>
-
+<h1>CherryDb demo<small>Sample site for CherryDb implementation using Sapper/Svelte</small></h1>
+<h5>Feel free to open more instances in different machines/browsers</h5>
 <div class="container">
-    <div class="column">
-        <iframe src="/list" title="leftPage"></iframe>
+    <div class="row">
+        Instances: <input type="range" min="1" max="4" bind:value=instances>
     </div>
-    <div class="column">
-        <iframe src="/list" title="rightPage"></iframe>
+    <div class="row fullheight">
+        {#each new Array(instances) as i, index }
+            <div class="col-sm" key=i style="width: calc({100 / instances}% - 0.6rem)">
+                <div>
+                    Frame #{index +1 }
+                </div>
+                <iframe src="/list" title="rightPage"></iframe>
+            </div>
+        {/each}
     </div>
 </div>
 
 <style>
     .container{
-        width: 100%;
         position: relative;
-        margin:0;
-        padding: 0;
-        border: none;
-        height: 100%;
+        height: 90%;
     }
 
-    .column{
-        width: calc(50% - 5px);
+    .container .row.fullheight {
         height: 100%;
-        margin:0;
-        padding: 0;
-        border: 1px solid grey;
-        border: 1px solid grey;
-        display: inline-block;
         position: relative;
     }
-    .column iframe{
+    
+
+    iframe{
         border: none;
         width: 98%;
         height: 100%;
-    }
+    } 
 </style>
+
+<script>
+    export default {
+        data() {
+            return {
+                instances: 1
+            }
+        }
+    }
+</script>
