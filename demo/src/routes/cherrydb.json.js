@@ -21,6 +21,9 @@ export function post(req, res) {
 
 	try {
 		var records = req.body;
+		if(typeof records === 'undefined' ){
+			throw new Error('records must be supplied');
+		}
 		console.log(records);
 		if (!Array.isArray(records))
 			records = [records];
@@ -50,8 +53,8 @@ export function post(req, res) {
 		});
 		res.end(json);
 		//console.log('posted OK')
-	} catch{
+	} catch (ex) {
 		res.statusCode = 500;
-		res.end();
+		res.end(ex);
 	}
 };
