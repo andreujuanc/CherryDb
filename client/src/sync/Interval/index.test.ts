@@ -1,14 +1,14 @@
 
-import IRecord from '../data/IRecord';
-import Remote from '../endpoint/Remote';
-import Record from '../data/Record';
+import IRecord from '../../data/IRecord';
+import Remote from '../../endpoint/Remote';
+import Record from '../../data/Record';
 //import * as fetch from 'node-fetch'
-import IRequest from '../endpoint/IRequest';
-import FetchRequest from '../endpoint/FetchRequest';
-import MemoryStore from '../data/stores/MemoryStore';
+import IRequest from '../../endpoint/IRequest';
+import FetchRequest from '../../endpoint/FetchRequest';
+import MemoryStore from '../../data/stores/MemoryStore';
 import Sync from './index';
 
-jest.mock('../endpoint/FetchRequest');
+jest.mock('../../endpoint/FetchRequest');
 const endpointURL = 'http://localhost:8765';
 
 test('Remote Send', async () => {

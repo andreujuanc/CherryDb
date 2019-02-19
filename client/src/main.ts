@@ -1,4 +1,4 @@
-import Sync from "./sync/index";
+import Sync from "./sync/Interval/index";
 import IStore from "./data/IStore";
 import Remote from "./endpoint/Remote";
 import FetchRequest from "./endpoint/FetchRequest";
