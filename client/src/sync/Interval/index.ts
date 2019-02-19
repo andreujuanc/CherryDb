@@ -1,9 +1,12 @@
 import IStore from "../../data/IStore";
 import Remote from "../../endpoint/Remote";
+import ISync from '../ISync';
 
-export default class Sync {
+export default class IntervalSync implements ISync {
     private _data: IStore;
     private _remote: Remote;
+    private _started: Boolean;
+
     public OnSyncCompleted: Function;
 
     constructor(data: IStore, remote: Remote) {
@@ -41,9 +44,22 @@ export default class Sync {
         }
     }
 
+
+    async Start() {
+        this._started = true;
+        await this.PollSync();
+    }
+
+    async Stop() {
+        this._started = false;
+        await this.PollSync();
+    }
+
     async PollSync() {
-        await this.Push();
-        await this.Pull();
-        setTimeout(() => this.PollSync(), 2000);
+        if (this._started === true) {
+            await this.Push();
+            await this.Pull();
+            setTimeout(() => this.PollSync(), 2000);
+        }
     }
 }

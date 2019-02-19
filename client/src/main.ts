@@ -1,4 +1,5 @@
-import Sync from "./sync/Interval/index";
+import IntervalSync from "./sync/Interval/index";
+import ISync from "./sync/ISync";
 import IStore from "./data/IStore";
 import Remote from "./endpoint/Remote";
 import FetchRequest from "./endpoint/FetchRequest";
@@ -7,7 +8,7 @@ import IRecord from "./data/IRecord";
 export * from "./data/stores/index";
 
 export default class CheeryDb {
-    private _sync: Sync;
+    private _sync: ISync;
     private _store: IStore;
     private _remote: Remote;
     private _fetchRequest: FetchRequest;
@@ -24,7 +25,7 @@ export default class CheeryDb {
         this._store = store;
         this._fetchRequest = new FetchRequest();
         this._remote = new Remote(endpoint, this._fetchRequest);
-        this._sync = new Sync(this._store, this._remote);
+        this._sync = new IntervalSync(this._store, this._remote);
     }
 
     Start(onchangeCallback: Function) {
@@ -32,7 +33,7 @@ export default class CheeryDb {
         this._started = true;
         this._sync.OnSyncCompleted  =  onchangeCallback;
 
-        var syncResult = this._sync.PollSync();
+        var syncResult = this._sync.Start();
         return true;
     }
 

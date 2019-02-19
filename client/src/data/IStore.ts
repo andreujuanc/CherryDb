@@ -1,5 +1,4 @@
 import IRecord from "./IRecord";
-import { Function } from 'estree';
 
 export default interface IStore {
 
