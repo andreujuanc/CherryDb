@@ -1,23 +1,27 @@
 
-// import IRecord from '../data/IRecord';
-// import Remote from '../endpoint/Remote';
-// import Record from '../data/Record';
-// //import * as fetch from 'node-fetch'
-// import IRequest from '../endpoint/IRequest';
-// import FetchRequest from '../endpoint/FetchRequest';
-// import Store from '../data/Store';
-// import Sync from '.';
-
-// jest.mock('../endpoint/FetchRequest');
-// const endpointURL = 'http://localhost:8765';
 import CherryDb, { MemoryStore } from './main';
+import IntervalSync from './sync/Interval/index';
+import Remote from './endpoint/Remote';
+import FetchRequest from './endpoint/FetchRequest';
 
-//import MemoryStore from './data/stores/MemoryStore';
+jest.mock('./sync/Interval/index');
+jest.mock('./endpoint/Remote');
+jest.mock('./endpoint/FetchRequest');
 
-test('Main constructor', async () => {
-    const store = new MemoryStore();
-    expect(()=>new CherryDb(null, store)).toThrow();
-    expect(()=>new CherryDb(undefined, store)).toThrow();
-    expect(()=>new CherryDb('', store)).toThrow();
+describe('CherryDB', () => {
 
-});
+    it('Main constructor', async () => {
+        const store = new MemoryStore();
+        expect(() => new CherryDb(null, store)).toThrow();
+        expect(() => new CherryDb(undefined, store)).toThrow();
+        expect(() => new CherryDb('', store)).toThrow();
+    });
+
+    it('Basic usage', async () => {
+        const store = new MemoryStore();
+        let sync = new IntervalSync(store, new Remote('http://localhost', new FetchRequest()));
+        let db = new CherryDb('http://localhost', store, sync);
+        db.Start(null);
+        expect(sync.Start).toBeCalled();
+    });
+})

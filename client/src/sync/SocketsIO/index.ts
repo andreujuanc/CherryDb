@@ -4,7 +4,7 @@ import ISync from '../ISync';
 
 export default class SocketsIOSync implements ISync {
     Start(): Promise<void> {
-        throw new Error("Method not implemented.");
+        return null;
     }    
     
     Stop(): Promise<void> {

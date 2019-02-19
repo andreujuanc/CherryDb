@@ -15,7 +15,7 @@ export default class CheeryDb {
     private _started: boolean = false;
     private _onChangeCallbacks : Function[] = [];
 
-    constructor(endpoint: string, store: IStore) {
+    constructor(endpoint: string, store: IStore, sync: ISync = null) {
         if (endpoint == null) throw new Error('First argument "endpoint" is mandatory');
         if (typeof endpoint != 'string') throw new Error('First argument "endpoint" must be a valid url');
         if (endpoint.length < 3) throw new Error('First argument "endpoint" must be a valid url');
@@ -25,7 +25,7 @@ export default class CheeryDb {
         this._store = store;
         this._fetchRequest = new FetchRequest();
         this._remote = new Remote(endpoint, this._fetchRequest);
-        this._sync = new IntervalSync(this._store, this._remote);
+        this._sync = sync ? sync : new IntervalSync(this._store, this._remote);
     }
 
     Start(onchangeCallback: Function) {
