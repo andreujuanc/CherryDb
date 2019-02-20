@@ -1,6 +1,6 @@
 {
   "name": "cherrydb",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "description": "A superfast alternative to pouchdb and azure mobile apps sdk.",
   "repository": "github:andreujuanc/CherryDb",
   "main": "./build/cherrydb.js",
