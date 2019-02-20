@@ -1,26 +1,40 @@
 import IStore from "../../data/IStore";
 import Remote from "../../endpoint/Remote";
 import ISync from '../ISync';
+import SyncBase from '../SyncBase';
 
-export default class SocketsIOSync implements ISync {
+let io  = require('socket.io-client')
 
-    //TODO: Considering having a base class for this
-    private _data: IStore;
-    private _remote: Remote;
-    private _started: Boolean;
 
-    public OnSyncCompleted: Function;
+export default class SocketsIOSync extends SyncBase {
+    private _socket: any;
+    
+    Initialize() {
+        this._store.OnPushDataChanged = this.OnPushDataChanged.bind(this);
+    }
 
-    constructor(data: IStore, remote: Remote) {
-        this._data = data;
-        this._remote = remote;
+    async OnPushDataChanged() {
+        await this.Push();
+        
+        
     }
 
     Start(): Promise<void> {
-        return null;
-    }    
-    
+        this._started = true;
+        this._socket = io(this._remote.getEndpointUrl(), undefined);
+        this._socket.on('connect', async (data: any) => {
+            await this.Pull();
+        });
+        this._socket.on('event', async (data: any) => {
+            await this.Pull();
+        });
+
+        return Promise.resolve();
+    }
+
     Stop(): Promise<void> {
-        throw new Error("Method not implemented.");
+        this._started = false;
+        this._socket.close();
+        return Promise.resolve();
     }
 }

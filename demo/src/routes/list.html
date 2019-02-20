@@ -28,10 +28,12 @@
 </table>
 
 <script>
-	import CherryDb, { MemoryStore } from 'cherrydb'
+	//import CherryDb, { MemoryStore } from 'cherrydb'
+	import CherryDb, { MemoryStore, SocketsIOSync } from '../../../client/build/cherrydb.js'
 	let url = typeof location !== 'undefined' ? location.origin : '/';
-	const db = new CherryDb(`${url}/cherrydb.json`, new MemoryStore());
-	let store = db.getStore();
+	const store = new MemoryStore();
+	const socketSync = new SocketsIOSync(store);
+	const db = new CherryDb(`${url}/cherrydb.json`, store, socketSync);
 	const colors = ['red', 'blue', 'green', 'purple', 'yellow', 'pink']
 	export default {
 		data() {

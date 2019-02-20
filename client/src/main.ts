@@ -6,6 +6,7 @@ import FetchRequest from "./endpoint/FetchRequest";
 import IRecord from "./data/IRecord";
 
 export * from "./data/stores/index";
+export * from "./sync/index";
 
 export default class CheeryDb {
     private _sync: ISync;
@@ -25,7 +26,12 @@ export default class CheeryDb {
         this._store = store;
         this._fetchRequest = new FetchRequest();
         this._remote = new Remote(endpoint, this._fetchRequest);
-        this._sync = sync ? sync : new IntervalSync(this._store, this._remote);
+        
+        this._sync = sync ? sync : new IntervalSync();
+        
+        this._sync.setStore(this._store);
+        this._sync.setRemote(this._remote);
+        this._sync.Initialize();
     }
 
     Start(onchangeCallback: Function) {

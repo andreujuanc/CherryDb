@@ -70,25 +70,29 @@
         }
     }
 
-    var Sync = /** @class */ (function () {
-        function Sync(data, remote) {
-            this._data = data;
-            this._remote = remote;
+    var SyncBase = /** @class */ (function () {
+        function SyncBase() {
         }
-        Sync.prototype.Pull = function () {
+        SyncBase.prototype.setStore = function (store) {
+            this._store = store;
+        };
+        SyncBase.prototype.setRemote = function (remote) {
+            this._remote = remote;
+        };
+        SyncBase.prototype.Pull = function () {
             return __awaiter(this, void 0, void 0, function () {
                 var TS, remoteData, ex_1;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
                             _a.trys.push([0, 3, , 4]);
-                            return [4 /*yield*/, this._data.GetLastRecordTimeStamp()];
+                            return [4 /*yield*/, this._store.GetLastRecordTimeStamp()];
                         case 1:
                             TS = _a.sent();
                             return [4 /*yield*/, this._remote.getNewRecordsFrom(TS)];
                         case 2:
                             remoteData = _a.sent();
-                            this._data.Upsert(remoteData);
+                            this._store.Upsert(remoteData);
                             if (this.OnSyncCompleted)
                                 this.OnSyncCompleted();
                             return [2 /*return*/, 1];
@@ -100,14 +104,14 @@
                 });
             });
         };
-        Sync.prototype.Push = function () {
+        SyncBase.prototype.Push = function () {
             return __awaiter(this, void 0, void 0, function () {
                 var pushData, pushResult, ex_2;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
                             _a.trys.push([0, 5, , 6]);
-                            return [4 /*yield*/, this._data.GetPushData()];
+                            return [4 /*yield*/, this._store.GetPushData()];
                         case 1:
                             pushData = _a.sent();
                             if (!(pushData.length > 0)) return [3 /*break*/, 4];
@@ -116,7 +120,7 @@
                             pushResult = _a.sent();
                             if (!Array.isArray(pushResult))
                                 pushResult = [pushResult];
-                            return [4 /*yield*/, this._data.ClearPushData(pushResult)];
+                            return [4 /*yield*/, this._store.ClearPushData(pushResult)];
                         case 3:
                             _a.sent();
                             _a.label = 4;
@@ -129,25 +133,66 @@
                 });
             });
         };
-        Sync.prototype.PollSync = function () {
+        return SyncBase;
+    }());
+
+    var IntervalSync = /** @class */ (function (_super) {
+        __extends(IntervalSync, _super);
+        function IntervalSync() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        IntervalSync.prototype.Initialize = function () {
+        };
+        IntervalSync.prototype.Start = function () {
+            return __awaiter(this, void 0, void 0, function () {
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            this._started = true;
+                            return [4 /*yield*/, this.PollSync()];
+                        case 1:
+                            _a.sent();
+                            return [2 /*return*/];
+                    }
+                });
+            });
+        };
+        IntervalSync.prototype.Stop = function () {
+            return __awaiter(this, void 0, void 0, function () {
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            this._started = false;
+                            return [4 /*yield*/, this.PollSync()];
+                        case 1:
+                            _a.sent();
+                            return [2 /*return*/];
+                    }
+                });
+            });
+        };
+        IntervalSync.prototype.PollSync = function () {
             return __awaiter(this, void 0, void 0, function () {
                 var _this = this;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
-                        case 0: return [4 /*yield*/, this.Push()];
+                        case 0:
+                            if (!(this._started === true)) return [3 /*break*/, 3];
+                            return [4 /*yield*/, this.Push()];
                         case 1:
                             _a.sent();
                             return [4 /*yield*/, this.Pull()];
                         case 2:
                             _a.sent();
                             setTimeout(function () { return _this.PollSync(); }, 2000);
-                            return [2 /*return*/];
+                            _a.label = 3;
+                        case 3: return [2 /*return*/];
                     }
                 });
             });
         };
-        return Sync;
-    }());
+        return IntervalSync;
+    }(SyncBase));
 
     var Record = /** @class */ (function () {
         function Record() {
@@ -162,6 +207,9 @@
             this._endpoint = endpoint;
             this._request = request;
         }
+        Remote.prototype.getEndpointUrl = function () {
+            return this._endpoint;
+        };
         Remote.prototype.getNewRecordsFrom = function (timestamp) {
             return __awaiter(this, void 0, void 0, function () {
                 var response, items;
@@ -536,8 +584,64 @@
         return MemoryStore;
     }(StoreBase));
 
+    var io = require('socket.io-client');
+    var SocketsIOSync = /** @class */ (function (_super) {
+        __extends(SocketsIOSync, _super);
+        function SocketsIOSync() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        SocketsIOSync.prototype.Initialize = function () {
+            this._store.OnPushDataChanged = this.OnPushDataChanged.bind(this);
+        };
+        SocketsIOSync.prototype.OnPushDataChanged = function () {
+            return __awaiter(this, void 0, void 0, function () {
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0: return [4 /*yield*/, this.Push()];
+                        case 1:
+                            _a.sent();
+                            return [2 /*return*/];
+                    }
+                });
+            });
+        };
+        SocketsIOSync.prototype.Start = function () {
+            var _this = this;
+            this._started = true;
+            this._socket = io(this._remote.getEndpointUrl(), undefined);
+            this._socket.on('connect', function (data) { return __awaiter(_this, void 0, void 0, function () {
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0: return [4 /*yield*/, this.Pull()];
+                        case 1:
+                            _a.sent();
+                            return [2 /*return*/];
+                    }
+                });
+            }); });
+            this._socket.on('event', function (data) { return __awaiter(_this, void 0, void 0, function () {
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0: return [4 /*yield*/, this.Pull()];
+                        case 1:
+                            _a.sent();
+                            return [2 /*return*/];
+                    }
+                });
+            }); });
+            return Promise.resolve();
+        };
+        SocketsIOSync.prototype.Stop = function () {
+            this._started = false;
+            this._socket.close();
+            return Promise.resolve();
+        };
+        return SocketsIOSync;
+    }(SyncBase));
+
     var CheeryDb = /** @class */ (function () {
-        function CheeryDb(endpoint, store) {
+        function CheeryDb(endpoint, store, sync) {
+            if (sync === void 0) { sync = null; }
             this._started = false;
             this._onChangeCallbacks = [];
             if (endpoint == null)
@@ -551,14 +655,17 @@
             this._store = store;
             this._fetchRequest = new FetchRequest();
             this._remote = new Remote(endpoint, this._fetchRequest);
-            this._sync = new Sync(this._store, this._remote);
+            this._sync = sync ? sync : new IntervalSync();
+            this._sync.setStore(this._store);
+            this._sync.setRemote(this._remote);
+            this._sync.Initialize();
         }
         CheeryDb.prototype.Start = function (onchangeCallback) {
             if (this._started)
                 return;
             this._started = true;
             this._sync.OnSyncCompleted = onchangeCallback;
-            var syncResult = this._sync.PollSync();
+            var syncResult = this._sync.Start();
             return true;
         };
         CheeryDb.prototype.getStore = function () {
@@ -592,6 +699,8 @@
     exports.default = CheeryDb;
     exports.IndexDbStore = IndexDbStore;
     exports.MemoryStore = MemoryStore;
+    exports.IntervalSync = IntervalSync;
+    exports.SocketsIOSync = SocketsIOSync;
 
     Object.defineProperty(exports, '__esModule', { value: true });
 

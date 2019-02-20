@@ -15,9 +15,13 @@ export default class Remote {
         this._request = request;
     }
 
+    getEndpointUrl(): string {
+        return this._endpoint;
+    }
+
     async getNewRecordsFrom(timestamp: number): Promise<Record[]> {
         let response = await this._request.fetch(`${this._endpoint}?from=${timestamp}`, {
-           // mode:'no-cors'
+            // mode:'no-cors'
         });
         if (!response.ok)
             return [];
@@ -29,10 +33,10 @@ export default class Remote {
 
     async Send(record: IRecord | IRecord[]): Promise<IRecord | IRecord[]> {
         //console.log('posting to ', `${this._endpoint}${this._path}`)
-        if(record == null) return Promise.resolve([]);
+        if (record == null) return Promise.resolve([]);
         const data = JSON.stringify(record);
         var isArray = Array.isArray(record);
-        if(Array.isArray(record) && record.length == 0 ) return Promise.resolve([]);
+        if (Array.isArray(record) && record.length == 0) return Promise.resolve([]);
 
         //console.log('data', data)
         /**
@@ -41,7 +45,7 @@ export default class Remote {
          */
         return this._request.fetch(`${this._endpoint}`, {
             method: 'POST',
-            mode:'cors',
+            mode: 'cors',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'

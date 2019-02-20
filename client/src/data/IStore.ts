@@ -17,4 +17,6 @@ export default interface IStore {
 
     ClearPushData(records: IRecord[]): void;
     GetPushData(): Promise<IRecord[]>;
+
+    OnPushDataChanged: Function;
 }
