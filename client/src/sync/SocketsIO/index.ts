@@ -15,18 +15,14 @@ export default class SocketsIOSync extends SyncBase {
 
     async OnPushDataChanged() {
         await this.Push();
-        
-        
     }
 
     Start(): Promise<void> {
         this._started = true;
-        this._socket = io(this._remote.getEndpointUrl(), undefined);
-        this._socket.on('connect', async (data: any) => {
-            await this.Pull();
-        });
-        this._socket.on('event', async (data: any) => {
-            await this.Pull();
+        this._socket = io();
+        
+        this._socket.on('datachanged',  (data: any) => {
+             this.Pull();
         });
 
         return Promise.resolve();

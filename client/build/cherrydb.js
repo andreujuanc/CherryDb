@@ -511,6 +511,8 @@
             else {
                 this._data.push(record);
             }
+            if (this.OnPushDataChanged)
+                this.OnPushDataChanged();
             return record;
         };
         MemoryStore.prototype.delete = function (record) {
@@ -521,6 +523,8 @@
             var dbRecord = this._data[dbRecordIndex];
             dbRecord.deleted = true; //marked as deleted
             this._push.push(dbRecord);
+            if (this.OnPushDataChanged)
+                this.OnPushDataChanged();
             return dbRecord;
         };
         MemoryStore.prototype.Upsert = function (records) {
@@ -608,27 +612,10 @@
         SocketsIOSync.prototype.Start = function () {
             var _this = this;
             this._started = true;
-            this._socket = io(this._remote.getEndpointUrl(), undefined);
-            this._socket.on('connect', function (data) { return __awaiter(_this, void 0, void 0, function () {
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, this.Pull()];
-                        case 1:
-                            _a.sent();
-                            return [2 /*return*/];
-                    }
-                });
-            }); });
-            this._socket.on('event', function (data) { return __awaiter(_this, void 0, void 0, function () {
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, this.Pull()];
-                        case 1:
-                            _a.sent();
-                            return [2 /*return*/];
-                    }
-                });
-            }); });
+            this._socket = io();
+            this._socket.on('datachanged', function (data) {
+                _this.Pull();
+            });
             return Promise.resolve();
         };
         SocketsIOSync.prototype.Stop = function () {

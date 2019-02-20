@@ -1,3 +1,5 @@
+import hub from '../hub';
+
 let DATA = [
 	{ text: 'Initial', id: 'cd8375c4-13d1-4aa4-9933-7f93d9d03f6c', timestamp: 123 }
 ];
@@ -46,6 +48,8 @@ export function post(req, res) {
 					DATA.push(records[i]);
 			}
 		}
+		console.log('TOTAL: ', DATA.length);
+		hub.dataChanged();
 		let json = JSON.stringify(records, null, 2); //JSON.stringify(req.body); 
 		//console.log('posted', json);
 		res.writeHead(200, {

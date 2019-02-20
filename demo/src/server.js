@@ -8,7 +8,11 @@ const dev = NODE_ENV === 'development';
 
 import bodyParser from 'body-parser';
 
-polka() // You can also use Express
+
+import hub from './hub';
+
+const server = require('http').createServer();
+polka({ server })
 	.use(bodyParser.urlencoded({
 		extended: true
 	}))
@@ -21,3 +25,11 @@ polka() // You can also use Express
 	.listen(PORT, err => {
 		if (err) console.log('error', err);
 	});
+
+const io = require('socket.io')(server);
+hub.setSocket(io);
+io.on('connection', () => {
+	console.log('someone connected')
+	hub.dataChanged();
+});
+

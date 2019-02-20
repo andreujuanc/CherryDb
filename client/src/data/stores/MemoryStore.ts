@@ -3,6 +3,7 @@ import IStore from "../IStore";
 import StoreBase from "./StoreBase";
 
 export default class MemoryStore extends StoreBase implements IStore {
+    OnPushDataChanged: Function;
 
     private mainDataFilter = (item: IRecord) => item.deleted != true;
 
@@ -53,6 +54,8 @@ export default class MemoryStore extends StoreBase implements IStore {
         else {
             this._data.push(record);
         }
+        if(this.OnPushDataChanged)
+            this.OnPushDataChanged();
         return record;
     }
 
@@ -64,6 +67,8 @@ export default class MemoryStore extends StoreBase implements IStore {
         const dbRecord  = this._data[dbRecordIndex];
         dbRecord.deleted = true; //marked as deleted
         this._push.push(dbRecord);
+        if(this.OnPushDataChanged)
+            this.OnPushDataChanged();
         return dbRecord;
     }
 
