@@ -6,7 +6,7 @@ import Record from '../../data/Record';
 import IRequest from '../../endpoint/IRequest';
 import FetchRequest from '../../endpoint/FetchRequest';
 import MemoryStore from '../../data/stores/MemoryStore';
-import Sync from './index';
+import IntervalSync from './index';
 
 jest.mock('../../endpoint/FetchRequest');
 const endpointURL = 'http://localhost:8765';
@@ -15,8 +15,10 @@ test('Remote Send', async () => {
     let data = new MemoryStore();
     let fetchRequest = new FetchRequest();
     let remote = new Remote(endpointURL, fetchRequest);
-    let sync = new Sync(data, remote);
-
+    let sync = new IntervalSync();
+    sync.setRemote(remote);
+    sync.setStore(data);
+    sync.Initialize();
 
     expect(data.Count()).toBe(0);
     expect((await data.GetPushData()).length).toBe(0);
