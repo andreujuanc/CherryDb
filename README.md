@@ -4,4 +4,4 @@
 
 ## This project is still under development.
 
-## Demo: [https://cherrydb-demo-site-hfmhtzuwyj.now.sh/](https://cherrydb-demo-site-hfmhtzuwyj.now.sh/)
+## Demo: [https://cherrydb-demo-site-yztpzsdwto.now.sh/](https://cherrydb-demo-site-yztpzsdwto.now.sh/)

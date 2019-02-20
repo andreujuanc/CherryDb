@@ -28,8 +28,8 @@
 </table>
 
 <script>
-	//import CherryDb, { MemoryStore } from 'cherrydb'
-	import CherryDb, { MemoryStore, SocketsIOSync } from '../../../client/build/cherrydb.js'
+	import CherryDb, { MemoryStore, SocketsIOSync } from 'cherrydb'
+	//import CherryDb, { MemoryStore, SocketsIOSync } from '../../../client/build/cherrydb.js'
 	let url = typeof location !== 'undefined' ? location.origin : '/';
 	const store = new MemoryStore();
 	const socketSync = new SocketsIOSync(store);

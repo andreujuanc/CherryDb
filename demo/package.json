@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "body-parser": "^1.18.3",
-    "cherrydb": "0.0.14",
+    "cherrydb": "0.0.16",
     "compression": "^1.7.1",
     "polka": "^0.4.0",
     "sirv": "^0.2.0",
