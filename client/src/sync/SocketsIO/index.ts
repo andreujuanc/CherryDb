@@ -5,17 +5,8 @@ import SyncBase from '../SyncBase';
 
 let io  = require('socket.io-client')
 
-
 export default class SocketsIOSync extends SyncBase {
     private _socket: any;
-    
-    Initialize() {
-        this._store.OnPushDataChanged = this.OnPushDataChanged.bind(this);
-    }
-
-    async OnPushDataChanged() {
-        await this.Push();
-    }
 
     Start(): Promise<void> {
         this._started = true;

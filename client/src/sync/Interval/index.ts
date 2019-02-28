@@ -4,11 +4,7 @@ import ISync from '../ISync';
 import SyncBase from '../SyncBase';
 
 export default class IntervalSync extends SyncBase  {
-    public OnSyncCompleted: Function;
-    Initialize(){
-        
-    }
-
+    
     async Start() {
         this._started = true;
         await this.PollSync();

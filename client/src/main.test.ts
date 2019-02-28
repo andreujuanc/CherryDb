@@ -19,7 +19,8 @@ describe('CherryDB', () => {
 
     it('Basic usage', async () => {
         const store = new MemoryStore();
-        let sync = new IntervalSync(store, new Remote('http://localhost', new FetchRequest()));
+        let sync = new IntervalSync();
+        sync.Initialize(store, new Remote('http://localhost', new FetchRequest()))
         let db = new CherryDb('http://localhost', store, sync);
         db.Start(null);
         expect(sync.Start).toBeCalled();

@@ -29,9 +29,7 @@ export default class CheeryDb {
         
         this._sync = sync ? sync : new IntervalSync();
         
-        this._sync.setStore(this._store);
-        this._sync.setRemote(this._remote);
-        this._sync.Initialize();
+        this._sync.Initialize(this._store, this._remote);
     }
 
     Start(onchangeCallback: Function) {

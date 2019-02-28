@@ -2,30 +2,28 @@ import IStore from "../data/IStore";
 import Remote from "../endpoint/Remote";
 import ISync from './ISync';
 
-import * as io  from 'socket.io-client';
-
-
 export default abstract class SyncBase implements ISync {
-
-    abstract Start(): Promise<void>;
-    abstract Stop(): Promise<void>;
-    abstract Initialize(): void;
-
-    OnSyncCompleted: Function;
 
     protected _store: IStore;
     protected _remote: Remote;
     protected _started: Boolean;
-    
-    setStore(store: IStore){
+
+    abstract Start(): Promise<void>;
+    abstract Stop(): Promise<void>;
+
+    OnSyncCompleted: Function;
+
+    Initialize(store: IStore, remote: Remote) {
         this._store = store;
-    }
-
-    setRemote(remote: Remote){
         this._remote = remote;
+        this._store.OnPushDataChanged = this.OnPushDataChanged.bind(this);
     }
 
-    protected async Pull() {
+    async OnPushDataChanged() {
+        await this.Push();
+    }
+
+    public async Pull() {
         try {
             const TS = await this._store.GetLastRecordTimeStamp();
             //console.log('Last record', lastRecord)
@@ -40,7 +38,7 @@ export default abstract class SyncBase implements ISync {
         }
     }
 
-    protected async Push() {
+    public async Push() {
         try {
             let pushData = await this._store.GetPushData();
             if (pushData.length > 0) {

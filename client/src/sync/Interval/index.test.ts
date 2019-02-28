@@ -12,30 +12,29 @@ jest.mock('../../endpoint/FetchRequest');
 const endpointURL = 'http://localhost:8765';
 
 test('Remote Send', async () => {
-    let data = new MemoryStore();
+    let store = new MemoryStore();
     let fetchRequest = new FetchRequest();
     let remote = new Remote(endpointURL, fetchRequest);
     let sync = new IntervalSync();
-    sync.setRemote(remote);
-    sync.setStore(data);
-    sync.Initialize();
 
-    expect(data.Count()).toBe(0);
-    expect((await data.GetPushData()).length).toBe(0);
+    sync.Initialize(store, remote);
+
+    expect(store.Count()).toBe(0);
+    expect((await store.GetPushData()).length).toBe(0);
     // @ts-ignore
     fetchRequest.jsonResult = [{ id: '1', timestamp: 100000 }, { id: '2', timestamp: 100001 }];
     await sync.Pull();
-    expect(data.Count()).toBe(2);
-    expect((await data.GetPushData()).length).toBe(0);
+    expect(store.Count()).toBe(2);
+    expect((await store.GetPushData()).length).toBe(0);
     
     // data.Delete(x => x.id == '1')
-    await data.Upsert({ id: null, timestamp: 0 });
-    expect((await data.GetPushData()).length).toBe(1);
+    await store.Upsert({ id: null, timestamp: 0 });
+    expect((await store.GetPushData()).length).toBe(1);
     // @ts-ignore
-    fetchRequest.jsonResult = await data.GetPushData();
+    fetchRequest.jsonResult = await store.GetPushData();
     await sync.Push();
 
-    expect((await data.GetPushData()).length).toBe(0);
+    expect((await store.GetPushData()).length).toBe(0);
         
 });
 
